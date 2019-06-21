@@ -13,6 +13,9 @@ import { environment } from '../../../environments/environment'
 // para mostrar alerts
 import Swal from 'sweetalert2';
 
+// servicio para subir imagen
+import { SubirArchivoService } from '../subir-archivo/subir-archivo.service'
+
 @Injectable({
   providedIn: 'root'
 })
@@ -22,7 +25,8 @@ export class UsuarioService {
   token: string;
 
   constructor( private http: HttpClient,
-               private router: Router ) {
+               private router: Router,
+               private uploadService: SubirArchivoService ) {
 
     this.cargarStorage();
 
@@ -39,6 +43,27 @@ export class UsuarioService {
   			return respuesta.usuario;
 
   		} ) );
+
+  }
+
+  actualizarUsuario( usuario: Usuario ) {
+
+    let url = environment.url + '/usuario/' + usuario._id;
+        url += '?token=' + this.token;
+
+    console.log( url );
+
+    return this.http.put( url, usuario )
+      .pipe( map( ( respuesta: any ) => {
+
+        let user = respuesta.usuario;
+
+        this.guardarStorage( user._id, this.token, user );
+
+        Swal.fire( 'Usuario actualizado', usuario.email, 'success' );
+        return true;
+
+      } ) );
 
   }
 
@@ -61,7 +86,7 @@ export class UsuarioService {
     return this.http.post( url, usuario )
       .pipe( map( ( respuesta: any ) => {
         
-        this.guardarStorage( respuesta.id, respuesta.token, usuario );
+        this.guardarStorage( respuesta.id, respuesta.token, respuesta.usuario );
         return true;
 
       } ) );
@@ -124,6 +149,27 @@ export class UsuarioService {
   estaLogueado() {
 
     return ( this.token.length > 5 ) ? true : false;
+
+  }
+
+  cambiarImagen( archivo: File, id: string ) {
+
+    this.uploadService.subirArchivo( archivo, 'usuarios', id )
+      .then( ( respuesta: any ) => {
+
+        //console.log( respuesta );
+        this.usuario.img = respuesta.usuario.img;
+
+        Swal.fire( 'Imagen actualizada', this.usuario.email, 'success' );
+
+        this.guardarStorage( id, this.token, this.usuario );
+
+      } )
+      .catch( error => {
+
+        console.error( error );
+
+      } );
 
   }
 
