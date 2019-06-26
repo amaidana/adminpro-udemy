@@ -5,8 +5,7 @@
       <div class="card">
           <div class="card-body">
               <h4 class="card-title">Perfil de usuario</h4>
-              <h6 class="card-subtitle">nombre de usuario</h6>
-
+              
               <form ngNativeValidate
                     (ngSubmit)="guardarPerfil( f.value )"
                     #f="ngForm"
@@ -50,8 +49,7 @@
 	  <div class="card">
 	      <div class="card-body" align="center">
 	          <h4 class="card-title">Foto del usuario</h4>
-	          <h6 class="card-subtitle"> nombre del usuario </h6>
-
+	          
 	          <img *ngIf="!imagenTemporal" 
                  [src]="usuario.img | imagen" 
                  class="w150">

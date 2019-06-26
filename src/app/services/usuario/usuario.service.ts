@@ -32,6 +32,27 @@ export class UsuarioService {
 
   }
 
+  cargarUsuarios( desde: number = 0 ) {
+
+    let url = environment.url + '/usuario?desde=' + desde;
+
+    return this.http.get( url );
+
+  }
+
+  buscarUsuarios( termino: string ) {
+
+    let url = environment.url + `/busqueda/coleccion/usuarios/${ termino }`;
+
+    return this.http.get( url )
+      .pipe( map( ( respuesta: any ) => {
+
+        return respuesta.usuarios;
+
+      } ) );
+
+  }
+
   crearUsuario( usuario: Usuario ) {
 
   	let url = environment.url + '/usuario';
@@ -56,14 +77,27 @@ export class UsuarioService {
     return this.http.put( url, usuario )
       .pipe( map( ( respuesta: any ) => {
 
-        let user = respuesta.usuario;
+        // usuario logueado = a usario que se editó
+        if( this.usuario._id === usuario._id ) {
 
-        this.guardarStorage( user._id, this.token, user );
+          let user = respuesta.usuario;
+
+          this.guardarStorage( user._id, this.token, user );
+
+        }
 
         Swal.fire( 'Usuario actualizado', usuario.email, 'success' );
         return true;
 
       } ) );
+
+  }
+
+  borrarUsuario( id: string ) {
+
+    let url = `${ environment.url }/usuario/${ id }?token=${ this.token }`;
+
+    return this.http.delete( url );
 
   }
 
