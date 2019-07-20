@@ -43,7 +43,7 @@ export class ImagenPipe implements PipeTransform {
 
   		case 'medico':
 
-  			url += '/medico/' + img;
+  			url += '/medicos/' + img;
 
   			break;
 

@@ -40,6 +40,8 @@ export class SubirArchivoService {
 
 	  	let url = environment.url + '/upload/' + tipo + '/' + id;
 
+	  	//console.log( url );
+
 	  	xhr.open( 'PUT', url, true );
 	  	xhr.send( formData );
 
