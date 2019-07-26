@@ -232,4 +232,29 @@ export class UsuarioService {
 
   }
 
+  renovarToken() {
+
+    let url = `${ environment.url }/login/renovarToken?token=${ this.token }`;
+
+    return this.http.get( url )
+      .pipe( map( ( respuesta: any ) => {
+
+        this.token = respuesta.token;
+        localStorage.setItem( 'token', this.token );
+
+        console.log( 'token renovado' );
+
+        return true;
+
+      } ), catchError( error => {
+
+        Swal.fire( 'Error de token', 'Error al intentar renovar el token', 'error' );
+        this.router.navigateByUrl( '/login' );
+
+        throw error;        
+
+      } ) );
+
+  }
+
 }

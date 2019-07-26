@@ -17,7 +17,7 @@ export class ModalUploadComponent implements OnInit {
   imagenTemporal: any;
 
   constructor( private subirArchivoService: SubirArchivoService,
-  						 private modalUploadService: ModalUploadService ) { }
+  						 public modalUploadService: ModalUploadService ) { }
 
   ngOnInit() {
   }
